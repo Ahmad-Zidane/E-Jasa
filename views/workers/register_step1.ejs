@@ -1,0 +1,20 @@
+
+<%- include('../partials/header', { title: 'Registrasi Worker (1)' }) %>
+<div class="card" style="max-width:820px; margin:0 auto;">
+  <h2>Registrasi Worker - Langkah 1 (Data Diri) <span class="badge"><%= type %></span></h2>
+  <form method="post" action="/workers/register/step1">
+    <input type="hidden" name="type" value="<%= type %>"/>
+    <label>Alamat</label>
+    <textarea name="address" required><%= (profile && profile.address) || '' %></textarea>
+    <label>Kota</label>
+    <input type="text" name="city" value="<%= (profile && profile.city) || '' %>" required />
+    <label>Radius Layanan (km)</label>
+    <input type="number" name="radius_km" value="<%= (profile && profile.radius_km) || 10 %>" required />
+    <label>Keahlian (pisahkan dengan koma)</label>
+    <input type="text" name="skills" placeholder="Cleaning, Cuci AC / Website, UI/UX" value="<%= (profile && profile.skills_json) ? JSON.parse(profile.skills_json).join(', ') : '' %>"/>
+    <label>Pengalaman (bulan)</label>
+    <input type="number" name="experience_months" value="<%= (profile && profile.experience_months) || 0 %>"/>
+    <button class="btn primary" type="submit">Lanjut</button>
+  </form>
+</div>
+<%- include('../partials/footer') %>

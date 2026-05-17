@@ -1,0 +1,22 @@
+
+<%- include('partials/header', { title: 'Beranda' }) %>
+<div class="grid">
+  <div class="card">
+    <h2>On-site Services</h2>
+    <p>Cleaning, Cuci AC, Taman, dll.</p>
+    <a class="btn primary" href="/marketplace?category=onsite">Lihat Marketplace</a>
+    <div style="margin-top:10px;"><small class="muted">Worker dengan opsi Body Cam tersedia.</small></div>
+  </div>
+  <div class="card">
+    <h2>Digital Services</h2>
+    <p>Website, UI/UX, Aplikasi, Game, 3D Design.</p>
+    <a class="btn primary" href="/marketplace?category=digital">Lihat Marketplace</a>
+    <div style="margin-top:10px;"><small class="muted">Filter Certified untuk menampilkan worker bersertifikat.</small></div>
+  </div>
+  <div class="card">
+    <h2>Daftar sebagai Worker</h2>
+    <p>Pilih jalur registrasi yang sesuai.</p>
+    <a class="btn" href="/auth/register">Register</a>
+  </div>
+</div>
+<%- include('partials/footer') %>

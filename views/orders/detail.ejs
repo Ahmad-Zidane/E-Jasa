@@ -1,0 +1,117 @@
+
+<%- include('../partials/header', { title: title }) %>
+<div class="card">
+  <h2>Order #<%= order.id %> — <%= order.service_name %></h2>
+  <p><b>Jenis:</b> <%= order.kind %> &nbsp; <b>Status:</b> <span class="badge"><%= order.status %></span></p>
+  <p><b>Total:</b> <%= formatCurrency(order.total) %> • <b>Fee:</b> <%= formatCurrency(order.platform_fee) %> • <b>Payout:</b> <%= formatCurrency(order.worker_payout) %></p>
+  <% if (order.schedule_at) { %><p><b>Jadwal:</b> <%= formatDate(order.schedule_at) %></p><% } %>
+  <% if (order.hold_until) { %><p class="badge warn">Hold payout s/d <%= formatDate(order.hold_until) %></p><% } %>
+  <p><b>Customer:</b> <%= order.customer_name %> • <b>Worker:</b> <%= order.worker_name %></p>
+
+  <% if (currentUser && currentUser.role === 'customer') { %>
+    <% if (order.status === 'pending') { %>
+      <form method="post" action="/orders/<%= order.id %>/pay_simulate">
+        <button class="btn primary" type="submit">Bayar (Simulasi Escrow)</button>
+      </form>
+    <% } %>
+    <% if (order.kind === 'onsite' && (order.status === 'in_progress' || order.status === 'paid')) { %>
+      <form method="post" action="/orders/<%= order.id %>/complete">
+        <button class="btn" type="submit">Selesaikan Order</button>
+      </form>
+    <% } %>
+    <form method="post" action="/orders/<%= order.id %>/dispute" style="margin-top:8px;">
+      <input type="hidden" name="type" value="customer_report"/>
+      <input type="text" name="description" placeholder="Alasan dispute..." />
+      <button class="btn danger" type="submit">Laporkan / Freeze</button>
+    </form>
+  <% } %>
+
+  <% if (currentUser && currentUser.role && currentUser.role.startsWith('worker')) { %>
+    <% if (order.kind === 'onsite' && order.status === 'paid') { %>
+      <h3>Check-in (On-site)</h3>
+      <form method="post" action="/orders/<%= order.id %>/checkin" enctype="multipart/form-data">
+        <label>Lat</label><input name="lat" placeholder="-6.2" />
+        <label>Lng</label><input name="lng" placeholder="106.8" />
+        <label>Foto/Video awal (body cam / rekaman singkat)</label>
+        <input type="file" name="media" accept="image/*,video/*" />
+        <button class="btn" type="submit">Check-in</button>
+      </form>
+    <% } %>
+    <% if (order.kind === 'onsite' && (order.status === 'in_progress' || order.status === 'paid')) { %>
+      <h3>Check-out (On-site)</h3>
+      <form method="post" action="/orders/<%= order.id %>/checkout" enctype="multipart/form-data">
+        <label>Lat</label><input name="lat" placeholder="-6.2" />
+        <label>Lng</label><input name="lng" placeholder="106.8" />
+        <label>Foto/Video sesudah</label>
+        <input type="file" name="media" accept="image/*,video/*" />
+        <button class="btn" type="submit">Check-out</button>
+      </form>
+    <% } %>
+    <% if (order.kind === 'digital') { %>
+      <h3>Milestones</h3>
+      <table class="table">
+        <tr><th>Nama</th><th>Amount</th><th>Status</th><th>Aksi</th></tr>
+        <% milestones.forEach(m => { %>
+          <tr>
+            <td><%= m.name %></td>
+            <td><%= formatCurrency(m.amount) %></td>
+            <td><%= m.status %></td>
+            <td>
+              <% if (m.status === 'pending' || m.status === 'submitted') { %>
+                <form method="post" action="/orders/<%= order.id %>/milestones/<%= m.id %>/submit" enctype="multipart/form-data" style="display:inline-block;">
+                  <input type="url" name="delivery_url" placeholder="Link hasil (opsional)"/>
+                  <input type="file" name="delivery" />
+                  <button class="btn" type="submit">Submit/Update</button>
+                </form>
+              <% } %>
+            </td>
+          </tr>
+        <% }) %>
+      </table>
+    <% } %>
+    <form method="post" action="/orders/<%= order.id %>/dispute" style="margin-top:8px;">
+      <input type="hidden" name="type" value="worker_report"/>
+      <input type="text" name="description" placeholder="Alasan dispute..." />
+      <button class="btn danger" type="submit">Laporkan / Freeze</button>
+    </form>
+  <% } %>
+
+  <% if (order.kind === 'digital' && currentUser && currentUser.role === 'customer') { %>
+    <h3>Milestones</h3>
+    <table class="table">
+      <tr><th>Nama</th><th>Amount</th><th>Status</th><th>Aksi</th></tr>
+      <% milestones.forEach(m => { %>
+        <tr>
+          <td><%= m.name %></td>
+          <td><%= formatCurrency(m.amount) %></td>
+          <td><%= m.status %></td>
+          <td>
+            <% if (m.status === 'submitted') { %>
+              <form method="post" action="/orders/<%= order.id %>/milestones/<%= m.id %>/approve" style="display:inline-block;">
+                <button class="btn" type="submit">Approve & Release</button>
+              </form>
+            <% } %>
+          </td>
+        </tr>
+      <% }) %>
+    </table>
+  <% } %>
+
+  <h3>Bukti / Media</h3>
+  <div class="grid">
+    <% proofs.forEach(p => { %>
+      <div class="card">
+        <div><span class="badge"><%= p.type %></span> <small class="muted"><%= formatDate(p.captured_at) %></small></div>
+        <% if (p.media_path) { %>
+          <% if (p.media_path.match(/\.(mp4|mov|webm)$/i)) { %>
+            <video src="<%= p.media_path %>" controls style="width:100%; border-radius:8px;"></video>
+          <% } else { %>
+            <img src="<%= p.media_path %>" style="max-width:100%; border-radius:8px;" />
+          <% } %>
+        <% } %>
+        <% if (p.lat && p.lng) { %><div><small>GPS: <%= p.lat %>, <%= p.lng %></small></div><% } %>
+      </div>
+    <% }) %>
+  </div>
+</div>
+<%- include('../partials/footer') %>

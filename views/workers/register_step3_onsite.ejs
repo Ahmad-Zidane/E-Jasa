@@ -1,0 +1,12 @@
+
+<%- include('../partials/header', { title: 'Wawancara On-site' }) %>
+<div class="card" style="max-width:720px; margin:0 auto;">
+  <h2>Jadwal Wawancara (On-site)</h2>
+  <form method="post" action="/workers/register/step3/onsite">
+    <label>Pilih waktu interview</label>
+    <input type="datetime-local" name="slot_time" required />
+    <button class="btn primary" type="submit">Jadwalkan</button>
+  </form>
+  <p><small class="muted">Admin akan menilai dan mengubah status Anda menjadi <b>TRIAL</b> jika lulus.</small></p>
+</div>
+<%- include('../partials/footer') %>

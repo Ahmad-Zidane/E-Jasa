@@ -1,0 +1,27 @@
+
+<%- include('../partials/header', { title: 'Registrasi Worker (2)' }) %>
+<div class="card" style="max-width:820px; margin:0 auto;">
+  <h2>Registrasi Worker - Langkah 2 (Identitas & Rekening) <span class="badge"><%= type %></span></h2>
+  <form method="post" action="/workers/register/step2" enctype="multipart/form-data">
+    <input type="hidden" name="type" value="<%= type %>"/>
+    <label>Nomor KTP</label>
+    <input type="text" name="ktp_number" required />
+    <label>Foto KTP</label>
+    <input type="file" name="ktp_photo" accept="image/*" required />
+    <label>Selfie (wajah jelas)</label>
+    <input type="file" name="selfie_photo" accept="image/*" required />
+    <label>SKCK (opsional demo)</label>
+    <input type="file" name="skck_photo" accept="image/*" />
+    <label>Nama Bank</label>
+    <input type="text" name="bank_name" required />
+    <label>No. Rekening</label>
+    <input type="text" name="bank_account_number" required />
+    <label>Nama di Rekening</label>
+    <input type="text" name="bank_account_name" required />
+    <% if (type === 'onsite') { %>
+      <label><input type="checkbox" name="consent_bodycam" value="1" /> Setuju rekaman singkat/body cam (jika diminta)</label>
+    <% } %>
+    <button class="btn primary" type="submit">Lanjut</button>
+  </form>
+</div>
+<%- include('../partials/footer') %>

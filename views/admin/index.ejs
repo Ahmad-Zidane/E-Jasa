@@ -1,0 +1,95 @@
+
+<%- include('../partials/header', { title: 'Admin' }) %>
+<div class="card">
+  <h2>Admin Dashboard</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Pending Dokumen (KYC)</h3>
+      <table class="table">
+        <tr><th>Worker</th><th>Type</th><th>Status</th><th>Aksi</th></tr>
+        <% docs.forEach(d => { %>
+          <tr>
+            <td><%= d.name %> (<%= d.email %>)</td>
+            <td><%= d.type %></td>
+            <td><%= d.status %></td>
+            <td>
+              <form method="post" action="/admin/workers/<%= d.id %>/approve-docs" style="display:inline-block;">
+                <button class="btn" type="submit">Approve Docs</button>
+              </form>
+              <form method="post" action="/admin/workers/<%= d.id %>/set-trial" style="display:inline-block;">
+                <button class="btn" type="submit">Set TRIAL</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Pending Sertifikat</h3>
+      <table class="table">
+        <tr><th>Worker</th><th>Issuer</th><th>Nama</th><th>Aksi</th></tr>
+        <% certs.forEach(c => { %>
+          <tr>
+            <td><%= c.worker_name %></td>
+            <td><%= c.issuer %></td>
+            <td><%= c.cert_name %></td>
+            <td>
+              <form method="post" action="/admin/certs/<%= c.id %>/verify" style="display:inline-block;">
+                <button class="btn" type="submit">Verify</button>
+              </form>
+              <form method="post" action="/admin/certs/<%= c.id %>/reject" style="display:inline-block;">
+                <button class="btn danger" type="submit">Reject</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Interview Terjadwal</h3>
+      <table class="table">
+        <tr><th>Worker</th><th>Waktu</th><th>Skor</th><th>Hasil</th><th>Aksi</th></tr>
+        <% interviews.forEach(i => { %>
+          <tr>
+            <td><%= i.worker_name %></td>
+            <td><%= formatDate(i.slot_time) %></td>
+            <td><%= i.score_total || '-' %></td>
+            <td><%= i.result %></td>
+            <td>
+              <form method="post" action="/admin/interviews/<%= i.id %>/result">
+                <input type="number" name="score" placeholder="score" style="width:100px;"/>
+                <select name="result">
+                  <option value="pass">pass</option>
+                  <option value="consider">consider</option>
+                  <option value="fail">fail</option>
+                </select>
+                <input type="text" name="notes" placeholder="notes"/>
+                <button class="btn" type="submit">Set</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Incidents (Open)</h3>
+      <table class="table">
+        <tr><th>ID</th><th>Order</th><th>Type</th><th>Desc</th><th>Aksi</th></tr>
+        <% incidents.forEach(inc => { %>
+          <tr>
+            <td>#<%= inc.id %></td>
+            <td>#<%= inc.order_id %></td>
+            <td><%= inc.type %></td>
+            <td><%= inc.description %></td>
+            <td>
+              <form method="post" action="/admin/incidents/<%= inc.id %>/resolve">
+                <button class="btn" type="submit">Resolve</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </table>
+    </div>
+  </div>
+</div>
+<%- include('../partials/footer') %>

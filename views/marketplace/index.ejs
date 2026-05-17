@@ -1,0 +1,40 @@
+
+<%- include('../partials/header', { title: 'Marketplace' }) %>
+<div class="card">
+  <h2>Marketplace - <%= category === 'onsite' ? 'On-site' : 'Digital' %></h2>
+  <form method="get">
+    <input type="hidden" name="category" value="<%= category %>">
+    <% if (category === 'onsite') { %>
+      <label><input type="checkbox" name="bodycam" value="true" <%= bodycam ? 'checked' : '' %>/> Body Cam ON</label>
+    <% } else { %>
+      <label><input type="checkbox" name="certified" value="true" <%= certifiedOnly ? 'checked' : '' %>/> Certified Only</label>
+    <% } %>
+    <button class="btn" type="submit">Filter</button>
+  </form>
+</div>
+<div class="grid">
+  <% workers.forEach(w => { %>
+    <div class="card">
+      <h3><%= w.name %></h3>
+      <div>
+        <span class="badge <%= (w.status==='VERIFIED')?'ok':'warn' %>"><%= w.status %></span>
+        <% if (category==='onsite' && w.consent_bodycam) { %><span class="badge ok">Body Cam</span><% } %>
+        <% if (category==='digital' && w.cert_count>0) { %><span class="badge ok">Certified</span><% } %>
+      </div>
+      <p><small class="muted"><%= w.city || '-' %> • radius <%= w.radius_km || 0 %> km</small></p>
+      <form method="get" action="<%= category==='onsite' ? '/orders/new' : '/orders/new-digital' %>">
+        <input type="hidden" name="worker_id" value="<%= w.user_id %>" />
+        <button class="btn primary" type="submit">Booking</button>
+      </form>
+    </div>
+  <% }) %>
+</div>
+<div class="card">
+  <h3>Layanan Tersedia</h3>
+  <ul>
+    <% services.forEach(s => { %>
+      <li><b><%= s.name %></b> — <%= formatCurrency(s.base_price) %></li>
+    <% }) %>
+  </ul>
+</div>
+<%- include('../partials/footer') %>

@@ -1,0 +1,19 @@
+
+<%- include('../partials/header', { title: 'Booking On-site' }) %>
+<div class="card" style="max-width:720px; margin:0 auto;">
+  <h2>Booking On-site</h2>
+  <form method="post" action="/orders">
+    <input type="hidden" name="kind" value="onsite" />
+    <input type="hidden" name="worker_id" value="<%= worker_id %>" />
+    <label>Pilih Layanan</label>
+    <select name="service_id">
+      <% services.forEach(s => { %>
+        <option value="<%= s.id %>"><%= s.name %> — <%= formatCurrency(s.base_price) %></option>
+      <% }) %>
+    </select>
+    <label>Waktu Kunjungan</label>
+    <input type="datetime-local" name="schedule_at" required />
+    <button class="btn primary" type="submit">Buat Order</button>
+  </form>
+</div>
+<%- include('../partials/footer') %>

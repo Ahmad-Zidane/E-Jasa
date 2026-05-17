@@ -1,0 +1,35 @@
+
+<%- include('../partials/header', { title: 'Register' }) %>
+<div class="card" style="max-width:720px; margin:0 auto;">
+  <h2>Register</h2>
+  <form method="post" action="/auth/register">
+    <label>Nama</label>
+    <input type="text" name="name" required />
+    <label>Email</label>
+    <input type="email" name="email" required />
+    <label>No. HP</label>
+    <input type="text" name="phone" />
+    <label>Password</label>
+    <input type="password" name="password" required />
+    <label>Daftar Sebagai</label>
+    <select name="role" required>
+      <option value="customer">Customer</option>
+      <option value="worker">Worker</option>
+    </select>
+    <div id="worker-type" style="display:none;">
+      <label>Jenis Worker</label>
+      <select name="worker_type">
+        <option value="onsite">On-site</option>
+        <option value="digital">Digital</option>
+      </select>
+    </div>
+    <button class="btn primary" type="submit">Register</button>
+  </form>
+</div>
+<script>
+  const roleSel = document.querySelector('select[name="role"]');
+  const wType = document.getElementById('worker-type');
+  function toggle() { wType.style.display = roleSel.value === 'worker' ? 'block' : 'none'; }
+  roleSel.addEventListener('change', toggle); toggle();
+</script>
+<%- include('../partials/footer') %>

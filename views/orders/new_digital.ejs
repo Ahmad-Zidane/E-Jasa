@@ -1,0 +1,18 @@
+
+<%- include('../partials/header', { title: 'Booking Digital' }) %>
+<div class="card" style="max-width:720px; margin:0 auto;">
+  <h2>Booking Digital</h2>
+  <form method="post" action="/orders">
+    <input type="hidden" name="kind" value="digital" />
+    <input type="hidden" name="worker_id" value="<%= worker_id %>" />
+    <label>Pilih Layanan</label>
+    <select name="service_id">
+      <% services.forEach(s => { %>
+        <option value="<%= s.id %>"><%= s.name %> — <%= formatCurrency(s.base_price) %></option>
+      <% }) %>
+    </select>
+    <p class="alert"><small class="muted">Milestone akan dibuat otomatis (30/40/30) setelah pembayaran simulasi.</small></p>
+    <button class="btn primary" type="submit">Buat Order</button>
+  </form>
+</div>
+<%- include('../partials/footer') %>

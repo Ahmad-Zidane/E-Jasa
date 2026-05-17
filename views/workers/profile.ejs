@@ -1,0 +1,13 @@
+
+<%- include('../partials/header', { title: 'Profil Worker' }) %>
+<div class="card">
+  <h2>Profil Worker</h2>
+  <% if (!profile) { %>
+    <p>Profil belum lengkap. <a class="btn" href="/workers/register?type=onsite&step=1">Mulai Registrasi</a></p>
+  <% } else { %>
+    <p><b>Jenis:</b> <%= profile.type %> &nbsp; <b>Status:</b> <span class="badge"><%= profile.status %></span></p>
+    <p><b>Kota:</b> <%= profile.city || '-' %> &nbsp; <b>Radius:</b> <%= profile.radius_km || 0 %> km</p>
+    <p><b>Body Cam Consent:</b> <%= profile.consent_bodycam ? 'Ya' : 'Tidak' %></p>
+  <% } %>
+</div>
+<%- include('../partials/footer') %>
