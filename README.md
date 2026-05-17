@@ -1,10 +1,10 @@
-# eJasa v2 (Demo)
+# eJasa website
 Platform demo siap jalan: layanan **On-site** (cleaning, cuci AC, dsb) + **Digital** (website, UI/UX, aplikasi, game, 3D) dengan:
-- Registrasi Worker On-site (KTP/Selfie/Rekening + interview + TRIAL/VERIFIED + consent Body Cam)
-- Registrasi Worker Digital (KTP/Selfie/Rekening + Sertifikat Terverifikasi oleh Admin)
-- Marketplace + filter (Body Cam / Certified)
+- Registrasi Worker On-site
+- Registrasi Worker Digital
+- Marketplace + filter
 - Order & Pembayaran **Simulasi Escrow**
-- On-site: check-in/out GPS + foto/video bukti (opsional body cam)
+- On-site: check-in/out GPS + foto/video bukti
 - Digital: milestones 30/40/30 (submit → approve → release simulasi)
 - Admin: verifikasi dokumen & sertifikat, interview, incidents, release/freeze
 - Review & rating (skema tersedia)
